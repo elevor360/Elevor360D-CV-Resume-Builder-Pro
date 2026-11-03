@@ -1,0 +1,12 @@
+{
+  "rotationSeconds": 8,
+  "adverts": [
+    {
+      "title": "Advertise your business here",
+      "description": "Reach Elevor360D app users. Enquire about advertising space.",
+      "image": "",
+      "url": "https://elevor360d.co.uk/advertise.html",
+      "enabled": true
+    }
+  ]
+}
