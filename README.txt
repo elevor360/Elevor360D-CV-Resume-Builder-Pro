@@ -1,8 +1,6 @@
-Elevor360D CV & Resume Builder Pro V5.4
-Advertising now uses the SAME advertising.js module, HTML banner structure, ad-config.json schema, and advertising/adverts.json feed as the uploaded Moving Box Tracker V5 Free Advertising Edition.
-
-Universal Advertising Manager V1: export adverts.json and images. Upload adverts.json to advertising/ and image files to advertising/images/.
-App ID for specific targeting: cv-resume-builder-pro. Group: business.
-The included advert is the exact Moving Box Tracker sample picture and data, for testing.
-Existing CV, cover-letter, print and installation features remain. Back up your data before updating.
-Upload the ZIP contents, including advertising.js and the advertising folder, to the existing GitHub Pages repository.
+V5.5 — Advertising image diagnostics
+The advert system is copied from the supplied Moving Box Tracker V5. The included sample image must be at advertising/images/elevor360d-apps.jpg.
+Upload folders preserving the structure; GitHub's browser file uploader may require dragging the entire extracted advertising folder contents with relative paths.
+Open https://YOUR-GITHUB-PAGES-APP-URL/advertising/images/elevor360d-apps.jpg directly to check the image.
+If image missing, the app will show the expected image path in the banner rather than silently hiding it.
+Upload all files to the same existing GitHub repository. Back up CV and cover letters before updating.
