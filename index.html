@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#173b65"><link rel="manifest" href="manifest.webmanifest"><title>Elevor360D CV & Resume Builder Pro V5.1</title><style>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#173b65"><link rel="manifest" href="manifest.webmanifest"><title>Elevor360D CV & Resume Builder Pro V5.2.1</title><style>
 :root{font-family:system-ui,Arial;color:#19334e;background:#edf2f8}*{box-sizing:border-box}body{margin:0}header{background:#173b65;color:white;padding:17px 22px}header h1{font-size:1.35rem;margin:0}header .headrow{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}header #installBtn{background:#0c946c;border:1px solid #b8ffe1;font-weight:700;white-space:nowrap}header small{opacity:.85}main{max-width:1220px;margin:auto;padding:16px}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}button,select,input,textarea{font:inherit}button{background:#175d9a;color:white;border:0;border-radius:8px;padding:10px 13px;cursor:pointer}button.secondary{background:#63798b}button.danger{background:#ad3434}button:focus,input:focus,textarea:focus{outline:2px solid #eaa93c}input,textarea,select{width:100%;padding:9px;border:1px solid #bdcbd7;border-radius:7px;background:white}textarea{min-height:82px;resize:vertical}label{display:block;font-weight:600;font-size:.9rem;margin:10px 0 5px}.layout{display:grid;grid-template-columns:minmax(300px,1fr) minmax(350px,1.12fr);gap:16px}.panel{background:white;border-radius:12px;padding:16px;box-shadow:0 3px 14px #19334e12}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}h2{margin:0 0 10px;font-size:1.1rem}h3{margin:16px 0 8px}.entry{background:#f1f5f9;border-radius:8px;padding:12px;margin:9px 0}.entry button{margin-top:8px}.preview{background:white;color:#24313c;min-height:750px;padding:38px;box-shadow:0 2px 12px #0001;overflow-wrap:anywhere}.preview h1{margin:0;font-size:2rem}.preview h2{border-bottom:1px solid #ccd7df;padding-bottom:4px;font-size:1.05rem;margin:20px 0 8px}.preview p{white-space:pre-wrap;line-height:1.45}.preview .meta{color:#53677a;font-size:.9rem}.preview .item{margin:10px 0}.preview .item strong{display:block}.preview img{width:95px;height:95px;object-fit:cover;float:right;border-radius:8px}.preview.modern{border-top:12px solid #137d9a}.preview.classic{font-family:Georgia,serif;border-top:0}.preview.classic h1{text-align:center}.preview.classic .meta{text-align:center}.preview.bold{border-left:16px solid #173b65}.hint{font-size:.85rem;color:#5e7080}.sectionhead{display:flex;justify-content:space-between;align-items:center;gap:8px}.sectionhead button{padding:6px 9px}.notice{padding:10px;background:#eaf5ff;border-radius:8px;margin-bottom:12px}@media(max-width:850px){.layout{grid-template-columns:1fr}.preview{padding:22px;min-height:450px}}@media print{body{background:white}header,.toolbar,.editor,.notice,.hint,.preview-title{display:none!important}main{padding:0;max-width:none}.layout{display:block}.panel{box-shadow:none;padding:0}.preview{box-shadow:none;padding:12mm;min-height:0;break-inside:auto} @page{size:A4;margin:0}}
 
 /* V2 appearance options */
@@ -72,40 +72,49 @@ $('backupBtn').addEventListener('click',()=>{const blob=new Blob([JSON.stringify
 <script>
 (()=>{'use strict';
 const $=id=>document.getElementById(id);
-let ads=[],index=0,timer=null;
-const validLink=v=>{try{const u=new URL(v,location.href);return ['https:','http:'].includes(u.protocol)?u.href:null}catch{return null}};
+const APP_ID='cv-resume-builder-pro', GROUP='business';
+let ads=[],index=0;
+const safeUrl=(value,base=location.href)=>{try{const u=new URL(value,base);return ['http:','https:'].includes(u.protocol)?u.href:null}catch{return null}};
+const slug=s=>String(s||'').toLowerCase().trim().replace(/[^a-z0-9-]+/g,'-').replace(/^-+|-+$/g,'');
+function eligible(a){
+ const today=new Date().toISOString().slice(0,10);
+ const ids=Array.isArray(a.appIds)?a.appIds:[];
+ return a&&a.active===true&&(!a.start||a.start<=today)&&(!a.end||a.end>=today)&&
+ (a.target==='all'||a.target===GROUP||(a.target==='specific'&&ids.map(slug).includes(APP_ID)));
+}
 function render(){
  if(!ads.length){$('adBanner').hidden=true;return}
- const ad=ads[index],url=validLink(ad.url);
+ const ad=ads[index],url=safeUrl(ad.url);
  $('adBanner').hidden=false;
- $('adTitle').textContent=ad.title||'';
- $('adDescription').textContent=ad.description||'';
+ $('adTitle').textContent=ad.title||ad.business||'Advertisement';
+ $('adDescription').textContent=ad.description||ad.business||'';
  $('adSlide').href=url||'#';
- $('adSlide').style.cursor=url?'pointer':'default';
  $('adSlide').onclick=e=>{if(!url)e.preventDefault()};
- const image=ad.image&&validLink(ad.image);
- $('adImage').hidden=!image;
- if(image){$('adImage').src=image;$('adImage').alt=ad.title||'Advertisement'}
+ $('adSlide').style.cursor=url?'pointer':'default';
+ const img=safeUrl(ad.image,'./advertising/');
+ $('adImage').hidden=!img;
+ if(img){$('adImage').src=img;$('adImage').alt=ad.title||'Advertisement'}
  $('adCount').textContent=(index+1)+' of '+ads.length;
- $('adPrev').disabled=ads.length<2;
- $('adNext').disabled=ads.length<2;
+ $('adPrev').disabled=ads.length<2;$('adNext').disabled=ads.length<2;
 }
 function step(n){if(ads.length<2)return;index=(index+n+ads.length)%ads.length;render()}
-$('adPrev').onclick=()=>step(-1);
-$('adNext').onclick=()=>step(1);
+$('adPrev').onclick=()=>step(-1);$('adNext').onclick=()=>step(1);
 async function init(){
  try{
- const response=await fetch('./adverts.json',{cache:'no-store'});
- if(!response.ok)throw Error('No advert settings');
- const data=await response.json();
- const list=Array.isArray(data)?data:Array.isArray(data.adverts)?data.adverts:[];
- ads=list.filter(a=>a&&a.enabled!==false&&typeof a.title==='string'&&a.title.trim()).map(a=>({...a,url:a.url||a.link||'',image:a.image||a.imageUrl||''}));
- if(!ads.length)return;
- render();
- const seconds=Number(data.rotationSeconds)||8;
- timer=setInterval(()=>{if(!document.hidden)step(1)},Math.max(4,Math.min(60,seconds))*1000);
- }catch{ /* No adverts configured: hide the banner */ }
+  const r=await fetch('./ad-config.json',{cache:'no-store'});
+  const config=r.ok?await r.json():{};
+  const feed=safeUrl(config.feedUrl||'advertising/adverts.json');
+  if(!feed)return;
+  const response=await fetch(feed,{cache:'no-store'});
+  if(!response.ok)return;
+  const data=await response.json();
+  ads=(Array.isArray(data.ads)?data.ads:[]).filter(eligible);
+  index=0;render();
+  const sec=Math.max(4,Math.min(60,Number(data.rotationSeconds)||8));
+  setInterval(()=>{if(!document.hidden)step(1)},sec*1000);
+ }catch{ $('adBanner').hidden=true }
 }
+$('adImage').addEventListener('error',()=>{$('adImage').hidden=true});
 init();
 })();
 </script>

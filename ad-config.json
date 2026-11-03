@@ -1,0 +1,6 @@
+{
+  "feedUrl": "advertising/adverts.json",
+  "appId": "cv-resume-builder-pro",
+  "group": "business",
+  "refreshMinutes": 30
+}
