@@ -4,3 +4,5 @@ Upload folders preserving the structure; GitHub's browser file uploader may requ
 Open https://YOUR-GITHUB-PAGES-APP-URL/advertising/images/elevor360d-apps.jpg directly to check the image.
 If image missing, the app will show the expected image path in the banner rather than silently hiding it.
 Upload all files to the same existing GitHub repository. Back up CV and cover letters before updating.
+
+V5.6: Corrected visible V5.1 header and document title. Cache name updated to v5-6 to trigger refresh. Use this ZIP to replace files at the root of the existing GitHub Pages repository. Upload the contents, not the ZIP itself. Preserve advertising/ and images/ directory structure. Back up CVs and cover letters first.
